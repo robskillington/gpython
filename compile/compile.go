@@ -112,18 +112,18 @@ func Compile(src, srcDesc string, mode py.CompileMode, futureFlags int, dont_inh
 	if err != nil {
 		return nil, err
 	}
-	return CompileAST(Ast, futureFlags, dont_inherit)
-}
-
-func CompileAST(node ast.Ast, futureFlags int, dont_inherit bool) (*py.Code, error) {
 	// Make symbol table
 	SymTable, err := symtable.NewSymTable(node, srcDesc)
 	if err != nil {
 		return nil, err
 	}
+	return CompileAST(Ast, SymTable, futureFlags, dont_inherit)
+}
+
+func CompileAST(node ast.Ast, symTable *symtable.SymTable, futureFlags int, dont_inherit bool) (*py.Code, error) {
 	c := newCompiler(nil, compilerScopeModule)
 	c.Filename = srcDesc
-	err = c.compileAst(node, srcDesc, futureFlags, dont_inherit, SymTable)
+	err = c.compileAst(node, srcDesc, futureFlags, dont_inherit, symTable)
 	if err != nil {
 		return nil, err
 	}

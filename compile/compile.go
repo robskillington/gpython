@@ -117,13 +117,13 @@ func Compile(src, srcDesc string, mode py.CompileMode, futureFlags int, dont_inh
 
 func CompileAST(node ast.Ast, srcDesc string, futureFlags int, dont_inherit bool) (*py.Code, error) {
 	// Make symbol table
-	SymTable, err := symtable.NewSymTable(Ast, srcDesc)
+	SymTable, err := symtable.NewSymTable(node, srcDesc)
 	if err != nil {
 		return nil, err
 	}
 	c := newCompiler(nil, compilerScopeModule)
 	c.Filename = srcDesc
-	err = c.compileAst(node, srcDesc, futureFlags, dont_inherit, symTable)
+	err = c.compileAst(node, srcDesc, futureFlags, dont_inherit, SymTable)
 	if err != nil {
 		return nil, err
 	}
